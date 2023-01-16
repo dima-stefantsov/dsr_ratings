@@ -1,0 +1,7 @@
+{
+    "require": {
+        "athari/yalinqo": "^2.4",
+        "kint-php/kint": "^5.0",
+        "symfony/polyfill": "^1.27"
+    }
+}
