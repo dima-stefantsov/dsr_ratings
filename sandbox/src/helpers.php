@@ -57,10 +57,14 @@ function get_players(&$games) {
 }
 
 function calculate_ratings(&$games, &$rating_calculator) {
+    $rating_calculator['data'] = [];
+
     $ratings = [];
     foreach ($games as $game) {
         process_game_rating($game, $rating_calculator, $ratings);
     }
+
+    unset($rating_calculator['data']);
     return $ratings;
 }
 
