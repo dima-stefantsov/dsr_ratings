@@ -11,6 +11,7 @@ $calculators =
     where(fn($v) => str_ends_with($v, '.php'))->
     orderby('$v', fn($a, $b) => in_array($b, $order) <=> in_array($a, $order))->
     thenby('$v', fn($a, $b) => array_search($a, $order) <=> array_search($b, $order))->
+    thenby('$v')->
     tolist();
 // ddd($calculators);
 
