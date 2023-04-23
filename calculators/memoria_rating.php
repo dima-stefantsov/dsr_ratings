@@ -40,16 +40,16 @@ function dsr_memoria_rating__main(&$teams) {
 	$team_rating_low[0] = from($teams[0])->min('$v["rating"]');
 	$team_rating_low[1] = from($teams[1])->min('$v["rating"]');
 	if ($team_rating_low[0] * 3 < $team_rating[0]) {
-		$team_rating[0] -= floor(sqrt($team_rating[0]**2 - $team_rating_low[0]**2)**0.75);
+		$team_rating[0] -= ceil(sqrt($team_rating[0]**2 - $team_rating_low[0]**2)**0.75);
 	}
 	if ($team_rating_low[1] * 3 < $team_rating[1]) {
-		$team_rating[1] -= floor(sqrt($team_rating[1]**2 - $team_rating_low[1]**2)**0.75);
+		$team_rating[1] -= ceil(sqrt($team_rating[1]**2 - $team_rating_low[1]**2)**0.75);
 	}
 
 	$factor = 2000;
 
 	$reward = [];
-	$reward[0] = floor(50 / (1 + 10**(($team_rating[0] - $team_rating[1])/$factor)));
+	$reward[0] = round(50 / (1 + 10**(($team_rating[0] - $team_rating[1])/$factor)));
 	$reward[1] = 50 - $reward[0];
 
 	foreach ($teams as &$team) {
