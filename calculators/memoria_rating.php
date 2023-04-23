@@ -14,7 +14,7 @@ $GLOBALS['rating_calculators']['memoria_rating'] = [
 		  - If the lowest rated player on a team has rating lower than 33% of the highest rated player, team rating is lowered slightly.
 		  - This is done to make games with extremely worse players or known trolls slightly less punishing.
 
-		Please give feedback on <a target="_blank" href="https://discord.gg/KXKw8HqKKK">Discord</a> (You can tag me using "<@826548928509902868>"). ^^
+		Please give feedback on <a target="_blank" href="https://discord.gg/KXKw8HqKKK">Discord</a> (You can tag me using "<@826548928509902868>").
 		',
 	'default_rating' => 2500,
 	'fields' => [
