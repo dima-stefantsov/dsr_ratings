@@ -75,7 +75,7 @@ function _memoria_rating__main(&$teams) {
 		foreach ($team as &$player) {
 			$multiplier = _memoria_rating__get_multiplier($player['status']);
 			$diff = ($multiplier*$reward[$player['winner_team']]);
-			$player['rating'] = max(1, $player['rating'] + $diff);
+			$player['rating'] = (int) max(1, $player['rating'] + $diff);
 		}
 	}
 }
