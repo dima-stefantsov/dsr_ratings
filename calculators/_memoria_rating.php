@@ -40,7 +40,7 @@ function _memoria_rating__main(&$teams) {
 	$matchup_predictions_weight_total = 0;
 	for ($i = 0; $i < $player_c; $i++) {
 		$matchup_predictions[$i] = 1-(round(100/(1 + 10**(($ratings1[$i]-$ratings2[$i])/$factor))))/100;
-		$matchup_predictions_weight[$i] = (abs(((0.5 - $matchup_predictions[$i])*3)))**1.5;
+		$matchup_predictions_weight[$i] = (abs(((0.5 - $matchup_predictions[$i])*3)))**1.6;
 		$matchup_predictions_weight_total += $matchup_predictions_weight[$i];
 	}
 	array_multisort($matchup_predictions_weight, SORT_DESC, $matchup_predictions);
