@@ -4,8 +4,12 @@ $GLOBALS['rating_calculators']['_memoria_rating'] = [
 	'description' => '
 		by <a href="/player/125980">Memoria</a>: Rating with per-matchup rating calculation, v1
 		
-		Only for 1v1, 2v2, and 3v3. Games under 4 minutes don\'t count.
-		
+		-Only for 1v1, 2v2, and 3v3.
+  		-Games under 4 minutes don\'t count.
+		-Just like in the main rating, people start at 2000 rating,
+		 4000 rating difference = 90% win prediction, max 100 rating per match
+  		-Rating prediction is calculated for each matchup (1v1),
+		 then it\'s combined into a final prediction 
 		',
 	'default_rating' => 2000,
 	'fields' => [
