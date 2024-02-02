@@ -31,7 +31,7 @@ function _memori_matchups__main(&$teams) {
     $matchup_predictions_weight = [];
     $matchup_predictions_weight_total = 0;
     for ($i = 0; $i < $player_count; $i++) {
-        $matchup_predictions[$i] = 1 - (round(100 / (1 + 10 ** (($teams[0][$i]['rating'] - $teams[1][$i]['rating']) / $factor)))) / 100;
+        $matchup_predictions[$i] = 1 - (round(1000 / (1 + 10 ** (($teams[0][$i]['rating'] - $teams[1][$i]['rating']) / $factor)))) / 1000;
         $matchup_predictions_weight[$i] = ((abs(0.5 - $matchup_predictions[$i]) + 0.03 ) * 2.5) ** 1.6;
         $matchup_predictions_weight_total += $matchup_predictions_weight[$i];
     }
