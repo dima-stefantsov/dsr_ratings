@@ -1,0 +1,123 @@
+<?php
+
+$GLOBALS['rating_calculators']['pink_color_rating'] = [
+    'description' => '
+        gas king rating
+        only objective: gas as much and as soon as you can
+
+        you start with 2000 rating (compression is activated although maybe not efficient, I was too lazy to see how you did it)
+        you lose 10 rating per minute for each gas not taken
+        you win 1, 2, 3, 4 rating per minute for gas 1, 2, 3, 4
+        ',
+    'default_rating' => 2000,
+    'fields' => [ // always available: game_id, player_id, team, winner_team, status
+        'g.duration',
+        // 'g.sc2_version',
+        // 'g.map',
+        // 'g.date_played',
+        // 'g.region',
+        // 'g.mode',
+        // 'g.players_per_team',
+        // 'g.bunker_destroyed_timings',
+        // 'g.players_count',
+        // 'g.mid_control_first_timing',
+        // 'g.mid_control_timings',
+        // 'g.parsed_in',
+
+        // 'gp.name',
+        // 'gp.clan',
+        // 'gp.color',
+        // 'gp.apm',
+        // 'gp.race',
+        'gp.gas_timings',
+        'gp.gas_count',
+        // 'gp.tier_timings',
+        // 'gp.tier',
+        // 'gp.mineral_value_killed',
+        // 'gp.status_timing',
+        // 'gp.recorder',
+        ],
+    'main' => 'dsr_gas_king_rating__main',
+    ];
+
+function same_sign($a, $b)
+{
+    return ($a >= 0 && $b >= 0) || ($a < 0 && $b < 0);
+}
+
+function dsr_gas_king_rating__main(&$teams)
+{
+    foreach($teams as &$team)
+    {
+        foreach($team as &$player)
+        {
+            $diff = 0;
+            $duration_of_the_game_in_minutes = $teams[0][0]['duration'] / 22.4 / 60;
+
+            if($player['gas_count'] === 0)
+            {
+                $player['rating'] -= 4 * 10 * $duration_of_the_game_in_minutes;
+            }
+
+            else
+            {
+                $min_timings = [1.5, 3, 4.5, 10];
+                $number_of_frames_in_a_min = 22.4 * 60;
+
+                for ($i = 1; $i <= $player['gas_count']; $i++)
+                {
+                    $gas_timing_in_minutes = intval($player['gas_timings'][$i - 1]) / $number_of_frames_in_a_min;
+                    $diff -= 10 * ($gas_timing_in_minutes - $min_timings[$i - 1]);
+                    $diff += $i * ($duration_of_the_game_in_minutes - $gas_timing_in_minutes);
+                }
+            }
+
+            if (!($player['rating'] + $diff < 0))
+            {
+                $dist_to_2000 = $player['rating'] - 2000;
+                
+                if ($player['rating'] > 2000)
+                {
+                    if (same_sign($dist_to_2000, $diff))
+                    {
+                        $player['rating'] += intval($diff * exp(-($player['rating'] - 2000) / 1500));
+                    }
+
+                    else
+                    {
+                        if (-$diff > $dist_to_2000)
+                        {
+                            $player['rating'] += intval(($diff + $dist_to_2000) / 10 - $dist_to_2000);
+                        }
+
+                        else
+                        {
+                            $player['rating'] += intval($diff);
+                        }
+                    }
+                }//Cette partie est fiable (J'ai vérifié les cas de figures avec des exemples types, vérifier avec des exemples généraux. (Relations d'ordre '<' et '>'))
+
+                else
+                {
+                    if (($dist_to_2000 >= 0 && $diff >= 0) || ($dist_to_2000 < 0 && $diff < 0))
+                    {
+                        $player['rating'] += intval($diff / 10);
+                    }
+
+                    else
+                    {
+                        if (-$diff / 10 < $dist_to_2000)
+                        {
+                            $player['rating'] += intval($diff + $dist_to_2000 * 10);
+                        }
+
+                        else
+                        {
+                            $player['rating'] += intval($diff / 10);
+                        }
+                    }
+                }//Pareil.
+            }
+        }
+    }
+}
