@@ -53,44 +53,46 @@ function dsr_gas_king_rating__main(&$teams)
                 {
                     if (same_sign($dist_to_2000, $diff))
                     {
-                        $player['rating'] += intval($diff * exp(-($player['rating'] - 2000) / 1500));
+                        $diff = intval($diff * exp(-($player['rating'] - 2000) / 1500));
                     }
 
                     else
                     {
                         if (-$diff > $dist_to_2000)
                         {
-                            $player['rating'] += intval(($diff + $dist_to_2000) / 10 - $dist_to_2000);
+                            $diff = intval(($diff + $dist_to_2000) / 10 - $dist_to_2000);
                         }
 
                         else
                         {
-                            $player['rating'] += intval($diff);
+                            $diff = intval($diff);
                         }
                     }
                 }
 
                 else
                 {
-                    if (($dist_to_2000 >= 0 && $diff >= 0) || ($dist_to_2000 < 0 && $diff < 0))
+                    if (same_sign($dist_to_2000, $diff))
                     {
-                        $player['rating'] += intval($diff / 10);
+                        $diff = intval($diff / 10);
                     }
 
                     else
                     {
                         if (-$diff / 10 < $dist_to_2000)
                         {
-                            $player['rating'] += intval($diff + $dist_to_2000 * 10);
+                            $diff = intval($diff + $dist_to_2000 * 10);
                         }
 
                         else
                         {
-                            $player['rating'] += intval($diff / 10);
+                            $diff = intval($diff / 10);
                         }
                     }
                 }
             }
+
+            $player['rating'] += $diff;
         }
     }
 }
