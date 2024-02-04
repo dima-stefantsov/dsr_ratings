@@ -51,7 +51,7 @@ function dsr_gas_king_rating__main(&$teams)
                 
                 if ($player['rating'] > 2000)
                 {
-                    if (same_sign($dist_to_2000, $diff))
+                    if (dsr_gas_king_rating__same_sign($dist_to_2000, $diff))
                     {
                         $diff = intval($diff * exp(-($player['rating'] - 2000) / 1500));
                     }
@@ -72,7 +72,7 @@ function dsr_gas_king_rating__main(&$teams)
 
                 else
                 {
-                    if (same_sign($dist_to_2000, $diff))
+                    if (dsr_gas_king_rating__same_sign($dist_to_2000, $diff))
                     {
                         $diff = intval($diff / 10);
                     }
@@ -97,7 +97,7 @@ function dsr_gas_king_rating__main(&$teams)
     }
 }
 
-function same_sign($a, $b)
+function dsr_gas_king_rating__same_sign($a, $b)
 {
     return ($a >= 0 && $b >= 0) || ($a < 0 && $b < 0);
 }
