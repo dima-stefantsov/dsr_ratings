@@ -95,7 +95,7 @@ function dsr_gas_king_rating__main(&$teams)
                             $player['rating'] += intval($diff);
                         }
                     }
-                }//Cette partie est fiable (J'ai vérifié les cas de figures avec des exemples types, vérifier avec des exemples généraux. (Relations d'ordre '<' et '>'))
+                }
 
                 else
                 {
@@ -116,7 +116,7 @@ function dsr_gas_king_rating__main(&$teams)
                             $player['rating'] += intval($diff / 10);
                         }
                     }
-                }//Pareil.
+                }
             }
         }
     }
