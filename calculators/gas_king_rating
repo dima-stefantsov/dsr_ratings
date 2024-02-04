@@ -25,6 +25,9 @@ function same_sign($a, $b)
 
 function dsr_gas_king_rating__main(&$teams)
 {
+    $min_timings = [1.5, 3, 4.5, 10];
+    $number_of_frames_in_a_min = 22.4 * 60;
+
     foreach($teams as &$team)
     {
         foreach($team as &$player)
@@ -39,9 +42,6 @@ function dsr_gas_king_rating__main(&$teams)
 
             else
             {
-                $min_timings = [1.5, 3, 4.5, 10];
-                $number_of_frames_in_a_min = 22.4 * 60;
-
                 for ($i = 1; $i <= $player['gas_count']; $i++)
                 {
                     $gas_timing_in_minutes = intval($player['gas_timings'][$i - 1]) / $number_of_frames_in_a_min;
