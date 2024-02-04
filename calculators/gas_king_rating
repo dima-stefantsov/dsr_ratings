@@ -18,11 +18,6 @@ $GLOBALS['rating_calculators']['gas_king_rating'] = [
     'main' => 'dsr_gas_king_rating__main',
     ];
 
-function dsr_gas_king_rating__same_sign($a, $b)
-{
-    return ($a >= 0 && $b >= 0) || ($a < 0 && $b < 0);
-}
-
 function dsr_gas_king_rating__main(&$teams)
 {
     $min_timings = [1.5, 3, 4.5, 10];
@@ -98,4 +93,9 @@ function dsr_gas_king_rating__main(&$teams)
             }
         }
     }
+}
+
+function same_sign($a, $b)
+{
+    return ($a >= 0 && $b >= 0) || ($a < 0 && $b < 0);
 }
