@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['rating_calculators']['gas_king_rating'] = [
+$GLOBALS['rating_calculators']['_mignoubou_gas_king'] = [
     'description' => '
         by <a href="/player/22267">PewPewPew</a>: gas king rating v1
         only objective: gas as much and as soon as you can
