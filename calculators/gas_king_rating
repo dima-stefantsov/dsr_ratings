@@ -2,7 +2,7 @@
 
 $GLOBALS['rating_calculators']['gas_king_rating'] = [
     'description' => '
-        gas king rating
+        by <a href="/player/22267">PewPewPew</a>: gas king rating v1
         only objective: gas as much and as soon as you can
 
         you start with 2000 rating (compression is activated although maybe not efficient, I was too lazy to see how you did it)
