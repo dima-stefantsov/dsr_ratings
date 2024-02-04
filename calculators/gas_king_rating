@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['rating_calculators']['pink_color_rating'] = [
+$GLOBALS['rating_calculators']['gas_king_rating'] = [
     'description' => '
         gas king rating
         only objective: gas as much and as soon as you can
@@ -10,32 +10,10 @@ $GLOBALS['rating_calculators']['pink_color_rating'] = [
         you win 1, 2, 3, 4 rating per minute for gas 1, 2, 3, 4
         ',
     'default_rating' => 2000,
-    'fields' => [ // always available: game_id, player_id, team, winner_team, status
+    'fields' => [
         'g.duration',
-        // 'g.sc2_version',
-        // 'g.map',
-        // 'g.date_played',
-        // 'g.region',
-        // 'g.mode',
-        // 'g.players_per_team',
-        // 'g.bunker_destroyed_timings',
-        // 'g.players_count',
-        // 'g.mid_control_first_timing',
-        // 'g.mid_control_timings',
-        // 'g.parsed_in',
-
-        // 'gp.name',
-        // 'gp.clan',
-        // 'gp.color',
-        // 'gp.apm',
-        // 'gp.race',
         'gp.gas_timings',
         'gp.gas_count',
-        // 'gp.tier_timings',
-        // 'gp.tier',
-        // 'gp.mineral_value_killed',
-        // 'gp.status_timing',
-        // 'gp.recorder',
         ],
     'main' => 'dsr_gas_king_rating__main',
     ];
