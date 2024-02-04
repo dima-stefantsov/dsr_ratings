@@ -2,8 +2,8 @@
 
 $GLOBALS['rating_calculators']['_mignoubou_gas_king'] = [
     'description' => '
-        by <a href="/player/22267">PewPewPew</a>: gas king rating v1
-        only objective: gas as much and as soon as you can
+        by <a href="/player/22267">PewPewPew</a>: gas king rating v2
+        only objective: gas as much and as soon as you can, but do not lose !
         you start with 2000 rating
         you lose 10 rating per minute for each gas not taken (without compression)
         you win 1, 2, 3, 4 rating per minute for gas 1, 2, 3, 4 (without compression)
@@ -19,7 +19,8 @@ $GLOBALS['rating_calculators']['_mignoubou_gas_king'] = [
 
 function dsr_gas_king_rating__main(&$teams)
 {
-    $min_timings = [1.5, 3, 4.5, 10];
+    $min_timings = [0, 1.5, 3, 10];
+    $good_timings = [5, 7.5, 10, 12.5];
     $number_of_frames_in_a_min = 22.4 * 60;
 
     foreach($teams as &$team)
@@ -29,18 +30,46 @@ function dsr_gas_king_rating__main(&$teams)
             $diff = 0;
             $duration_of_the_game_in_minutes = $teams[0][0]['duration'] / 22.4 / 60;
 
-            if($player['gas_count'] == 0)
+            if ($player['status'] == 'win')
             {
-                $player['rating'] -= 4 * 10 * $duration_of_the_game_in_minutes;
+                for ($i = 0; $i < $player['gas_count']; $i++)
+                {
+                    $gas_timing_in_minutes = intval($player['gas_timings'][$i]) / $number_of_frames_in_a_min;
+                    $diff -= 10 * ($gas_timing_in_minutes - $min_timings[$i]);
+                    $diff += ($i + 1) * ($duration_of_the_game_in_minutes - $gas_timing_in_minutes);
+                }
             }
 
             else
             {
-                for ($i = 1; $i <= $player['gas_count']; $i++)
+                if($player['gas_count'] == 0)
                 {
-                    $gas_timing_in_minutes = intval($player['gas_timings'][$i - 1]) / $number_of_frames_in_a_min;
-                    $diff -= 10 * ($gas_timing_in_minutes - $min_timings[$i - 1]);
-                    $diff += $i * ($duration_of_the_game_in_minutes - $gas_timing_in_minutes);
+                    $player['rating'] -= 4 * 10 * $duration_of_the_game_in_minutes;
+                }
+
+                else
+                {
+                    for ($i = 0; $i <= intval($player['gas_count']); $i++)
+                    {
+                        $gas_timing_in_minutes = intval($player['gas_timings'][$i]) / $number_of_frames_in_a_min;
+
+                        if ($i > 0)
+                        {
+                            $punishing_for_gassing_too_soon = 10 * ($gas_timing_in_minutes - (intval($player['gas_timings'][$i]) / $number_of_frames_in_a_min + $good_timings[$i - 1]));
+                        }
+
+                        else
+                        {
+                            $punishing_for_gassing_too_soon = 0;
+                        }
+
+                        if ($punishing_for_gassing_too_soon < 0)
+                        {
+                            $diff += $punishing_for_gassing_too_soon;
+                        }
+
+                        $diff -= ($i + 1) * ($duration_of_the_game_in_minutes - $gas_timing_in_minutes);
+                    }
                 }
             }
 
@@ -52,7 +81,7 @@ function dsr_gas_king_rating__main(&$teams)
                 {
                     if (dsr_gas_king_rating__same_sign($dist_to_2000, $diff))
                     {
-                        $diff *= exp(-($player['rating'] - 2000) / 1500);
+                        $diff *= exp(-($player['rating'] - 2000) / 2000);
                     }
 
                     else
