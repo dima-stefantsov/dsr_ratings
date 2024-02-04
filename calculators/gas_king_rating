@@ -35,7 +35,7 @@ function dsr_gas_king_rating__main(&$teams)
             $diff = 0;
             $duration_of_the_game_in_minutes = $teams[0][0]['duration'] / 22.4 / 60;
 
-            if($player['gas_count'] === 0)
+            if($player['gas_count'] == 0)
             {
                 $player['rating'] -= 4 * 10 * $duration_of_the_game_in_minutes;
             }
