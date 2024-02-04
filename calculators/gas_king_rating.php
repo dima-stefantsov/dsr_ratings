@@ -4,7 +4,6 @@ $GLOBALS['rating_calculators']['_mignoubou_gas_king'] = [
     'description' => '
         by <a href="/player/22267">PewPewPew</a>: gas king rating v1
         only objective: gas as much and as soon as you can
-
         you start with 2000 rating
         you lose 10 rating per minute for each gas not taken (without compression)
         you win 1, 2, 3, 4 rating per minute for gas 1, 2, 3, 4 (without compression)
@@ -48,24 +47,19 @@ function dsr_gas_king_rating__main(&$teams)
             if ($player['rating'] + $diff >= 0)
             {
                 $dist_to_2000 = $player['rating'] - 2000;
-                
+
                 if ($player['rating'] > 2000)
                 {
                     if (dsr_gas_king_rating__same_sign($dist_to_2000, $diff))
                     {
-                        $diff = intval($diff * exp(-($player['rating'] - 2000) / 1500));
+                        $diff *= exp(-($player['rating'] - 2000) / 1500);
                     }
 
                     else
                     {
                         if (-$diff > $dist_to_2000)
                         {
-                            $diff = intval(($diff + $dist_to_2000) / 10 - $dist_to_2000);
-                        }
-
-                        else
-                        {
-                            $diff = intval($diff);
+                            $diff = ($diff + $dist_to_2000) / 10 - $dist_to_2000;
                         }
                     }
                 }
@@ -74,24 +68,24 @@ function dsr_gas_king_rating__main(&$teams)
                 {
                     if (dsr_gas_king_rating__same_sign($dist_to_2000, $diff))
                     {
-                        $diff = intval($diff / 10);
+                        $diff = $diff / 10;
                     }
 
                     else
                     {
                         if (-$diff / 10 < $dist_to_2000)
                         {
-                            $diff = intval($diff + $dist_to_2000 * 10);
+                            $diff = $diff + $dist_to_2000 * 10;
                         }
 
                         else
                         {
-                            $diff = intval($diff / 10);
+                            $diff = $diff / 10;
                         }
                     }
                 }
 
-                $player['rating'] += $diff;
+                $player['rating'] += round($diff);
             }
         }
     }
