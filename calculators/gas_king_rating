@@ -18,7 +18,7 @@ $GLOBALS['rating_calculators']['gas_king_rating'] = [
     'main' => 'dsr_gas_king_rating__main',
     ];
 
-function same_sign($a, $b)
+function dsr_gas_king_rating__same_sign($a, $b)
 {
     return ($a >= 0 && $b >= 0) || ($a < 0 && $b < 0);
 }
