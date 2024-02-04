@@ -5,9 +5,9 @@ $GLOBALS['rating_calculators']['_mignoubou_gas_king'] = [
         by <a href="/player/22267">PewPewPew</a>: gas king rating v1
         only objective: gas as much and as soon as you can
 
-        you start with 2000 rating (compression is activated although maybe not efficient, I was too lazy to see how you did it)
-        you lose 10 rating per minute for each gas not taken
-        you win 1, 2, 3, 4 rating per minute for gas 1, 2, 3, 4
+        you start with 2000 rating
+        you lose 10 rating per minute for each gas not taken (without compression)
+        you win 1, 2, 3, 4 rating per minute for gas 1, 2, 3, 4 (without compression)
         ',
     'default_rating' => 2000,
     'fields' => [
@@ -90,9 +90,9 @@ function dsr_gas_king_rating__main(&$teams)
                         }
                     }
                 }
-            }
 
-            $player['rating'] += $diff;
+                $player['rating'] += $diff;
+            }
         }
     }
 }
