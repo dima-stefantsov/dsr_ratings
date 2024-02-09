@@ -32,7 +32,7 @@ function _memoria_matchups__main(&$teams) {
     $matchup_predictions_weight_total = 0;
     for ($i = 0; $i < count($teams[0]); $i++) {
         $elo_part = abs(($teams[0][$i]['rating'] - $teams[1][$i]['rating']) / $factor);
-        $matchup_predictions[$i] = floor(1000 / (1 + 10 ** ($elo_part))) / 1000;
+        $matchup_predictions[$i] = floor(1000 / (1 + 10 ** $elo_part)) / 1000;
 		
         if ($teams[0][$i]['rating'] > $teams[1][$i]['rating']) {
             $matchup_predictions[$i] = 1 - $matchup_predictions[$i];
@@ -49,13 +49,13 @@ function _memoria_matchups__main(&$teams) {
     }
     
     $reward = [];
-    $reward[0] = intval(250 * (1 - ($prediction)));
+    $reward[0] = round(250 * (1 - $prediction));
     $reward[1] = 250 - $reward[0];
     
     foreach ($teams as &$team) {
         foreach ($team as &$player) {
-            $multiplier = ($player['status'] === 'win' ? 1 : -1);
-            $diff = ($multiplier * $reward[$player['winner_team']]);
+            $multiplier = $player['status'] === 'win' ? 1 : -1;
+            $diff = $multiplier * $reward[$player['winner_team']];
             $player['rating'] = max(1, $player['rating'] + intval($diff));
         }
     }
