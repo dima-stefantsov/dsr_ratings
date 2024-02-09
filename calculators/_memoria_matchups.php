@@ -26,12 +26,11 @@ function _memoria_matchups__main(&$teams) {
         return;
     }
     
-    $player_count = count($teams[0]);
     $factor = 4000;
     $matchup_predictions = [];
     $matchup_predictions_weight = [];
     $matchup_predictions_weight_total = 0;
-    for ($i = 0; $i < $player_count; $i++) {
+    for ($i = 0; $i < count($teams[0]); $i++) {
         $elo_part = abs(($teams[0][$i]['rating'] - $teams[1][$i]['rating']) / $factor);
         $matchup_predictions[$i] = floor(1000 / (1 + 10 ** ($elo_part))) / 1000;
 		
@@ -44,7 +43,7 @@ function _memoria_matchups__main(&$teams) {
     }
     
     $prediction = 0;
-    for ($i = 0; $i < $player_count; $i++) {
+    for ($i = 0; $i < count($teams[0]); $i++) {
         $normalised_weight_mult = $matchup_predictions_weight[$i] / $matchup_predictions_weight_total;
         $prediction += $matchup_predictions[$i] * $normalised_weight_mult;
     }
