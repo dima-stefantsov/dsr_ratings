@@ -44,7 +44,7 @@ function dsr_gas_king_rating__main(&$teams)
             {
                 if($player['gas_count'] == 0)
                 {
-                    $player['rating'] -= 4 * 10 * $duration_of_the_game_in_minutes;
+                    $diff -= 4 * 10 * $duration_of_the_game_in_minutes;
                 }
 
                 else
