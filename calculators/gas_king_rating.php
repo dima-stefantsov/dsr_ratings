@@ -87,7 +87,7 @@ function dsr_gas_king_rating__main(&$teams)
 
                     else
                     {
-                        if (-$diff > $dist_to_2000)
+                        if ($diff + $dist_to_2000 < 0)
                         {
                             $diff = ($diff + $dist_to_2000) / 10 - $dist_to_2000;
                         }
