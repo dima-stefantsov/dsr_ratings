@@ -57,16 +57,11 @@ function dsr_gas_king_rating__main(&$teams)
                         if ($i > 0)
                         {
                             $punishing_for_gassing_too_soon = 10 * ($gas_timing_in_minutes - (intval($player['gas_timings'][$i - 1]) / $number_of_frames_in_a_min + $good_timings[$i - 1]));
-                        }
-
-                        else
-                        {
-                            $punishing_for_gassing_too_soon = 0;
-                        }
-
-                        if ($punishing_for_gassing_too_soon < 0)
-                        {
-                            $diff += $punishing_for_gassing_too_soon;
+                            
+                            if ($punishing_for_gassing_too_soon < 0)
+                            {
+                                $diff += $punishing_for_gassing_too_soon;
+                            }
                         }
 
                         $diff -= ($i + 1) * ($duration_of_the_game_in_minutes - $gas_timing_in_minutes);
