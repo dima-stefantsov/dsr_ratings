@@ -22,13 +22,13 @@ function dsr_gas_king_rating__main(&$teams)
     $min_timings = [0, 1.5, 3, 10];
     $good_timings = [5, 7.5, 10, 12.5];
     $number_of_frames_in_a_min = 22.4 * 60;
+    $duration_of_the_game_in_minutes = $teams[0][0]['duration'] / 22.4 / 60;
 
     foreach($teams as &$team)
     {
         foreach($team as &$player)
         {
             $diff = 0;
-            $duration_of_the_game_in_minutes = $teams[0][0]['duration'] / 22.4 / 60;
 
             if ($player['status'] == 'win')
             {
