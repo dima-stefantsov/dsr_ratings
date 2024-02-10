@@ -57,7 +57,7 @@ function dsr_gas_king_rating__main(&$teams)
                         if ($i > 0)
                         {
                             $punishing_for_gassing_too_soon = 10 * ($gas_timing_in_minutes - (intval($player['gas_timings'][$i - 1]) / $number_of_frames_in_a_min + $good_timings[$i - 1]));
-                            
+
                             if ($punishing_for_gassing_too_soon < 0)
                             {
                                 $diff += $punishing_for_gassing_too_soon;
@@ -73,7 +73,7 @@ function dsr_gas_king_rating__main(&$teams)
             {
                 $dist_to_2000 = $player['rating'] - 2000;
 
-                if ($dist_to_2000 > 0)
+                if ($dist_to_2000 >= 0)
                 {
                     if (dsr_gas_king_rating__same_sign($dist_to_2000, $diff))
                     {
