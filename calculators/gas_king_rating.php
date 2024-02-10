@@ -7,6 +7,7 @@ $GLOBALS['rating_calculators']['_mignoubou_gas_king'] = [
         you start with 2000 rating
         you lose 10 rating per minute for each gas not taken (without compression)
         you win 1, 2, 3, 4 rating per minute for gas 1, 2, 3, 4 (without compression)
+        you are punished if your gases do not pay themselves back (only when losing)
         ',
     'default_rating' => 2000,
     'fields' => [
@@ -34,7 +35,7 @@ function dsr_gas_king_rating__main(&$teams)
             {
                 for ($i = 0; $i < $player['gas_count']; $i++)
                 {
-                    $gas_timing_in_minutes = intval($player['gas_timings'][$i]) / $number_of_frames_in_a_min;
+                    $gas_timing_in_minutes = intval($player['gas_timings'][$i]) / $number_of_frames_in_a_min; 
                     $diff -= 10 * ($gas_timing_in_minutes - $min_timings[$i]);
                     $diff += ($i + 1) * ($duration_of_the_game_in_minutes - $gas_timing_in_minutes);
                 }
@@ -55,12 +56,12 @@ function dsr_gas_king_rating__main(&$teams)
 
                         if ($i > 0)
                         {
-                            $punishing_for_gassing_too_soon = 10 * ($gas_timing_in_minutes - (intval($player['gas_timings'][$i]) / $number_of_frames_in_a_min + $good_timings[$i - 1]));
+                            $punishing_for_gassing_too_soon = 10 * ($gas_timing_in_minutes - (intval($player['gas_timings'][$i - 1]) / $number_of_frames_in_a_min + $good_timings[$i - 1]));
                         }
 
                         else
                         {
-                            $punishing_for_gassing_too_soon = 0;
+                            $punishing_for_gassing_too_soon = 0; // Useless condition, simply added it for readability, I will remove it during the final modifications
                         }
 
                         if ($punishing_for_gassing_too_soon < 0)
