@@ -61,7 +61,7 @@ function dsr_gas_king_rating__main(&$teams)
 
                         else
                         {
-                            $punishing_for_gassing_too_soon = 0; // Useless condition, simply added it for readability, I will remove it during the final modifications
+                            $punishing_for_gassing_too_soon = 0;
                         }
 
                         if ($punishing_for_gassing_too_soon < 0)
