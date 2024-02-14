@@ -54,8 +54,8 @@ function _memoria_matchups__main(&$teams) {
     }
 
     $max_reward = 250 / max(1, 
-    max(1.25, from($teams[0])->max('$v["rating"]') / $factor, from($teams[1])->max('$v["rating"]') / $factor) - 0.25,
-    max(1, $factor / (from($teams[0])->min('$v["rating"]') + 2500), $factor / (from($teams[1])->min('$v["rating"]') + 2500)));
+        max(1.25, from($teams[0])->max('$v["rating"]') / $factor, from($teams[1])->max('$v["rating"]') / $factor) - 0.25,
+        max(1, $factor / (from($teams[0])->min('$v["rating"]') + 2500), $factor / (from($teams[1])->min('$v["rating"]') + 2500)));
     $reward = [];
     $reward[0] = round($max_reward * (1 - $prediction));
     $reward[1] = round($max_reward * $prediction);
