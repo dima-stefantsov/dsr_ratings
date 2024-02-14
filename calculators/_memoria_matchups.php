@@ -36,16 +36,14 @@ function _memoria_matchups__main(&$teams) {
         $matchup_predictions[$i] = floor(1000 / (1 + 10 ** $elo_part)) / 1000;
         if (count($teams[0]) > 1) {
             $matchup_predictions[$i] -= $matchup_predictions[$i] ** (2 / (0.05 + $elo_part));
-            if ($matchup_predictions[$i] < 0) {
-                $matchup_predictions[$i] = 0;
-            }
+            $matchup_predictions[$i] = max(0, $matchup_predictions[$i]);
         }
 
         if ($teams[0][$i]['rating'] > $teams[1][$i]['rating']) {
             $matchup_predictions[$i] = 1 - $matchup_predictions[$i];
         }
 
-        $matchup_predictions_weight[$i] = ((abs(0.5 - $matchup_predictions[$i]) + 1) * 3) ** ($elo_part / 1.25 + (max($teams[0][$i]['rating'], $teams[1][$i]['rating']) / $factor));
+        $matchup_predictions_weight[$i] = ((abs(0.5 - $matchup_predictions[$i]) + 1) * 3) ** ($elo_part/1.25 + max($teams[0][$i]['rating'], $teams[1][$i]['rating'])/$factor);
         $matchup_predictions_weight_total += $matchup_predictions_weight[$i];
     }
 
@@ -55,7 +53,9 @@ function _memoria_matchups__main(&$teams) {
         $prediction += $matchup_predictions[$i] * $normalised_weight_mult;
     }
 
-    $max_reward = 250 / max(1, max(1.25, from($teams[0])->max('$v["rating"]') / $factor, from($teams[1])->max('$v["rating"]') / $factor) - 0.25, max(1, $factor / (from($teams[0])->min('$v["rating"]') + 2500), $factor / (from($teams[1])->min('$v["rating"]') + 2500)));
+    $max_reward = 250 / max(1, 
+    max(1.25, from($teams[0])->max('$v["rating"]') / $factor, from($teams[1])->max('$v["rating"]') / $factor) - 0.25,
+    max(1, $factor / (from($teams[0])->min('$v["rating"]') + 2500), $factor / (from($teams[1])->min('$v["rating"]') + 2500)));
     $reward = [];
     $reward[0] = round($max_reward * (1 - $prediction));
     $reward[1] = round($max_reward * $prediction);
