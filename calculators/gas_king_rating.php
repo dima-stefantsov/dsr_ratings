@@ -3,6 +3,7 @@
 $GLOBALS['rating_calculators']['_mignoubou_gas_king'] = [
     'description' => '
         by <a href="/player/22267">PewPewPew</a>: gas king rating v2
+        
         only objective: gas as much and as soon as you can, but do not lose !
         you start with 2000 rating
         you lose 10 rating per minute for each gas not taken (without compression) (only when winning)
