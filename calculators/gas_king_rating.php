@@ -111,7 +111,7 @@ function dsr_gas_king_rating__main(&$teams)
                     }
                 }
 
-                $player['rating'] += round($diff);
+                $player['rating'] += intval($diff);
             }
         }
     }
