@@ -6,6 +6,7 @@ $GLOBALS['rating_calculators']['_mignoubou_gas_king'] = [
         
         only objective: gas as much and as soon as you can, but do not lose !
         you start with 2000 rating
+        when you (gain / lose) rating, your rating is compressed, so that you do not reach (1_000_000 / 0) points in a few games: the (higher / lower) your rating is, the less rating you (gain / lose)
         you lose 10 rating per minute for each gas not taken (without compression) (only when winning)
         you win 1, 2, 3, 4 rating per minute for gas 1, 2, 3, 4 (without compression)
         you are punished if your gases do not pay themselves back (only when losing)
