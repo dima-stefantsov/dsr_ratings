@@ -71,7 +71,7 @@ function dsr_gas_king_rating__main(&$teams)
                 }
             }
 
-            if ($player['rating'] + $diff >= 0)
+            if ($player['rating'] + $diff > 0)
             {
                 $dist_to_2000 = $player['rating'] - 2000;
 
