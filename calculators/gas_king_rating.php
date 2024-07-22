@@ -106,6 +106,7 @@ function dsr_gas_king_rating__main(&$teams)
             }
         }
     }
+    $player['rating'] = max(1, $player['rating']);
 }
 
 /*function dsr_gas_king_rating__main(&$teams)
