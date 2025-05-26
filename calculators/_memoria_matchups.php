@@ -2,18 +2,18 @@
 
 $GLOBALS['rating_calculators']['_memoria_matchups'] = [
     'description' => '
-        by <a href="/player/125980">Memoria</a>: per-matchup calculation v3
+        by <a href="/player/125980">Memoria</a>: per-matchup calculation v4
         
         
         - games under 30 seconds don\'t count, games under 4 minutes have lowered rating change (x0.5 >> x1)
-        - players start at 2000 rating, 4000 rating difference ≈ 90% win prediction, prediction gets more exagerated the more onesided the matchup is
-        - max 250 rating per match, decreases if teammate rating difference for either of the teams is more than 2500 because of uncertainity
+        - players start at 2500 rating, 4000 rating difference ≈ 90% win prediction, prediction gets more exagerated the more onesided the matchup is
+        - max 250 rating per match, decreases if teammate rating difference for either of the teams is more than 2500
         - win prediction is calculated for each matchup (each 1v1), then it\'s combined into a final prediction
-        - in case of an uneven game (NvM), each possible matchup is calculated, and rating change is adjusted to the team count ratio
-        - if someone crashes before the game starts, that player loses rating, but is not considered for matchup calculations (as if the player was not in the game)
-        - afterwards if there are leavers, respective team\'s rating gain from winning will be lower; if two people from opposite teams leave within 10 seconds, or if the first leave is within 1 minute of the game ending, rating gain stays the same
+        - in case of an uneven game (NvM), each possible matchup is calculated, and rating change is adjusted to the player count ratio
+        - if someone crashes before the game starts, that player loses some rating, but is not considered for matchup calculations (as if the player was not in the game)
+        - afterwards, if there are leavers, respective team\'s rating gain from winning will be lower; if two people from opposite teams leave within 10 seconds, or if the first leave is within 1 minute of the game ending, rating gain stays the same
         ',
-    'default_rating' => 2000,
+    'default_rating' => 2500,
     'fields' => [
         'g.duration', 'gp.status_timing'
     ],
@@ -27,7 +27,7 @@ function _memoria_matchups__main(&$teams) {
         return;
     }
 
-    //removes people who crash from calculations, flags leavers
+    //removes crashed players from calculations, flags leavers
     $team_shifted = [[]];
     $leavers = [[]];
     $j = 0;
@@ -48,7 +48,7 @@ function _memoria_matchups__main(&$teams) {
         $j++;
     }
 
-    //adjust rating gain based on first 1-2 leavers
+    //adjust teams' rating gain based on first 1-2 leavers
     $team_leaver_multiplier = [0, 1];
     if ($i != 0) {
         array_multisort($leavers, SORT_ASC, $leavers);
@@ -79,14 +79,14 @@ function _memoria_matchups__main(&$teams) {
     $matchup_predictions = [];
     $matchup_predictions_weight = [];
     $matchup_predictions_weight_total = 0;
-    $y = 0;
+    $matchup_counter = 0;
     if (count($team_shifted[0]) === count($team_shifted[1])) {
         for ($i = 0; $i < count($team_shifted[0]); $i++) {
-            //true 90%
+            //modified elo equation, making it 90%/1:9 instead of 1:10 per n factor
             $abs_team_shifted = abs($team_shifted[0][$i] - $team_shifted[1][$i]);
             $elo_part = abs(($team_shifted[0][$i] - $team_shifted[1][$i]) / (($factor + $abs_team_shifted / (20 ** ($abs_team_shifted / $factor)))));
             $matchup_predictions[$i] = floor(1000 / (1 + 10 ** $elo_part)) / 1000;
-            //percentage exageration
+            //percentage exageration in even team games
             if (count($teams[0]) > 1) {
                 $matchup_predictions[$i] -= $matchup_predictions[$i] ** (2 / (0.02 + $elo_part));
                 $matchup_predictions[$i] = max(0, $matchup_predictions[$i]);
@@ -98,7 +98,7 @@ function _memoria_matchups__main(&$teams) {
             //assigns matchup prediction weight in the final prediction
             $matchup_predictions_weight[$i] = ((abs(0.5 - $matchup_predictions[$i]) + 1.8) * 1.5) ** ($elo_part + max($team_shifted[0][$i], $team_shifted[1][$i]) / $factor);
             $matchup_predictions_weight_total += $matchup_predictions_weight[$i];
-            $y++;
+            $matchup_counter++;
         }
     }
     else {
@@ -106,27 +106,28 @@ function _memoria_matchups__main(&$teams) {
             for ($team1_player = 0; $team1_player < count($team_shifted[0]); $team1_player++) {
                 $abs_team_shifted = abs($team_shifted[0][$team1_player] - $team_shifted[1][$team2_player]);
                 $elo_part = abs(($team_shifted[0][$team1_player] - $team_shifted[1][$team2_player]) / (($factor + $abs_team_shifted / (20 ** ($abs_team_shifted / $factor)))));
-                $matchup_predictions[$y] = floor(1000 / (1 + 10 ** $elo_part)) / 1000;
-                $matchup_predictions[$y] += $matchup_predictions[$y] ** (1.9 / (0.02 + $elo_part));
-                $matchup_predictions[$y] = min(0.5, $matchup_predictions[$y]);
+                $matchup_predictions[$matchup_counter] = floor(1000 / (1 + 10 ** $elo_part)) / 1000;
+                $matchup_predictions[$matchup_counter] += $matchup_predictions[$matchup_counter] ** (1.9 / (0.02 + $elo_part));
+                $matchup_predictions[$matchup_counter] = min(0.5, $matchup_predictions[$matchup_counter]);
 
                 if ($team_shifted[0][$team1_player] > $team_shifted[1][$team2_player]) {
-                    $matchup_predictions[$y] = 1 - $matchup_predictions[$y];
+                    $matchup_predictions[$matchup_counter] = 1 - $matchup_predictions[$matchup_counter];
                 }
 
-                $matchup_predictions_weight[$y] = ((abs(0.5 - $matchup_predictions[$y]) + 1.5) * 1.725) ** ($elo_part + max($team_shifted[0][$team1_player], $team_shifted[1][$team2_player]) / $factor);
-                $matchup_predictions_weight_total += $matchup_predictions_weight[$y];
-                $y++;
+                $matchup_predictions_weight[$matchup_counter] = ((abs(0.5 - $matchup_predictions[$matchup_counter]) + 1.5) * 1.85) ** ($elo_part + max($team_shifted[0][$team1_player], $team_shifted[1][$team2_player]) / $factor);
+                $matchup_predictions_weight_total += $matchup_predictions_weight[$matchup_counter];
+                $matchup_counter++;
             }
         }
     }
-
+	
     $prediction = 0;
-    for ($i = 0; $i < $y; $i++) {
+    for ($i = 0; $i < $matchup_counter; $i++) {
         $normalised_weight_mult = $matchup_predictions_weight[$i] / $matchup_predictions_weight_total;
         $prediction += $matchup_predictions[$i] * $normalised_weight_mult;
     }
 
+    //modifies maximum rating change based on biggest rating difference between team members once over 2500, and game length below 4 minutes
     $max_reward = 250 / max(1, max((max($team_shifted[0]) - min($team_shifted[0])), (max($team_shifted[1]) - min($team_shifted[1]))) / ($factor * 0.875) +  0.2856);
     $gametime_multiplier = max(1, (420 - ($game_duration_seconds - 30)) / 210);
 
@@ -138,7 +139,7 @@ function _memoria_matchups__main(&$teams) {
         foreach ($team as &$player) {
             $status_multiplier = $player['status'] === 'win' ? ($player['team'] === $team_leaver_multiplier[0] ? $team_leaver_multiplier[1] : 1) : -1;
             $team_multiplier = $player['status'] === 'win' ? ($player['team'] === $team_ratio_multiplier[0] ? 1 : $team_ratio_multiplier[1]) : ($player['team'] === $team_ratio_multiplier[0] ? -1 : $team_ratio_multiplier[1]);
-            $diff = $status_multiplier * $team_multiplier * $gametime_multiplier * $reward[$player['winner_team']];
+            $diff = $status_multiplier * $team_multiplier / $gametime_multiplier * $reward[$player['winner_team']];
             if ($player['status_timing'] === '0') $diff = $max_reward * -0.8;
             $player['rating'] = max(1, $player['rating'] + intval($diff));
         }
