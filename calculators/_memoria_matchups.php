@@ -120,7 +120,7 @@ function _memoria_matchups__main(&$teams) {
             }
         }
     }
-	
+
     $prediction = 0;
     for ($i = 0; $i < $matchup_counter; $i++) {
         $normalised_weight_mult = $matchup_predictions_weight[$i] / $matchup_predictions_weight_total;
