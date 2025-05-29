@@ -33,6 +33,7 @@ function dsr_commanders_1v1_nova__get_teams_with_race_ratings(&$teams) {
     foreach ($teams_with_race_ratings as &$team) {
         foreach ($team as &$player) {
             $player['rating'] = $race_ratings[$player['race']][$player['player_id']] ?? $GLOBALS['rating_calculators']['commanders_1v1_nova']['default_rating'];
+            $GLOBALS['rating_calculators']['main_current']['data']['players_games_count'][$player['player_id']] = &$GLOBALS['rating_calculators']['commanders_1v1_nova']['data']['race_players_games_count'][$player['race']][$player['player_id']];
         }
     }
 

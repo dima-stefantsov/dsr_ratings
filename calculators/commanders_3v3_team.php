@@ -32,6 +32,7 @@ function dsr_commanders_3v3_team__get_teams_with_solo_team_rating(&$teams) {
             $player['rating'] =
                 $ratings_solo_team[$player['is_solo']][$player['player_id']] ??
                 $GLOBALS['rating_calculators']['commanders_3v3_team']['default_rating'];
+            $GLOBALS['rating_calculators']['main_current']['data']['players_games_count'][$player['player_id']] = &$GLOBALS['rating_calculators']['commanders_3v3_team']['data']['solo_team_players_games_count'][$player['is_solo']][$player['player_id']];
         }
     }
 
